@@ -30,7 +30,7 @@ List createDivList(DivEsts * div){
     return divLst;
 }
 
-IntegerMatrix matrix2Mat(std::vector<map<uint, uint>>& dfMat,
+IntegerMatrix matrix2Mat(std::vector<rare_map>& dfMat,
 						std::vector<string> colnames, std::vector<string> rownames, bool transpose=false ){
 	// create a mat from a vector vector uint
 	IntegerMatrix NM;
@@ -119,11 +119,9 @@ List rcpp_rarefaction(Rcpp::String input,
 	}
 
     // create variables to be filled
-    vector<DivEsts*> * divvs;
-    divvs 			=  new vector<DivEsts*>;
-
+    vector<DivEsts*>  divvs(0,NULL);
 	// return vector for counts
-	std::vector<vector<map<uint, uint>>> retCnts(NoOfMatrices); // initialize a vector of matrices with the number of repeats
+	std::vector<vector<rare_map>> retCnts(NoOfMatrices); // initialize a vector of matrices with the number of repeats
 	std::vector<string> retCntsSampleNames;
 	std::vector<string> rowNames;
 	std::vector<string> skippedSamples;
@@ -156,13 +154,13 @@ List rcpp_rarefaction(Rcpp::String input,
 	if(verbose == true){
 		Rcout << "Will now prepare diversity measures for R\n";
 	}
-	for(uint i = 0; i < divvs->size(); i++){
+	for(uint i = 0; i < divvs.size(); i++){
 		// create a Lst from div pointer
-		List tmpDivLst = createDivList((*divvs)[i]);
+		List tmpDivLst = createDivList(divvs[i]);
 		majorLst.push_back(tmpDivLst);
-		delete (*divvs)[i];
+		//delete divvs[i];
 	}
-	delete divvs;
+
 
 
 	std::vector<Rcpp::IntegerMatrix> RrarefyMatrices(NoOfMatrices); // vector to hold te matrices

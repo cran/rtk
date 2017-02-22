@@ -5,23 +5,23 @@ std::mutex rarefyMutex;
 void lineCntOut(const string inF, const string outF, const string arg4){
 	ifstream in(inF.c_str());
 	ofstream out(outF.c_str(), ios::out);
-	if (!in){ 
+	if (!in){
 #ifdef notRpackage
-cerr << "Can't open infile " << inF << endl; std::exit(99); 
+cerr << "Can't open infile " << inF << endl; std::exit(99);
 #endif
 }
-	if (!out){ 
+	if (!out){
 #ifdef notRpackage
-cerr << "Can't open outfile " << outF << endl; std::exit(99); 
+cerr << "Can't open outfile " << outF << endl; std::exit(99);
 #endif
 }
 	//read file that contains nicely ordered all indexes of lines to be extracted
 	string line;
 	vector<uint> srtTar;
 	ifstream idxS(arg4.c_str());
-	if (!idxS){ 
+	if (!idxS){
 #ifdef notRpackage
-cerr << "Can't open outfile " << arg4 << endl; std::exit(99); 
+cerr << "Can't open outfile " << arg4 << endl; std::exit(99);
 #endif
 }
 	while (getline(idxS, line, '\n')) {
@@ -35,12 +35,12 @@ cerr << "Can't open outfile " << arg4 << endl; std::exit(99);
 	sort(srtTar.begin(), srtTar.end());
 
 	//sort through new file
-	if (!out){ 
+	if (!out){
 #ifdef notRpackage
 cerr << "Can't open outfile " << outF << endl; std::exit(99);
 #endif
  }
-	int cnt(1); uint j(0);
+	uint cnt(1); uint j(0);
 	while (getline(in, line, '\n')) {
 		if (cnt == srtTar[j]){
 			out << line << endl;
@@ -53,7 +53,7 @@ cerr << "Can't open outfile " << outF << endl; std::exit(99);
 
 	in.close(); out.close();
 	if (j != srtTar.size()){
-		
+
 #ifdef notRpackage
 cerr << "Missed " << (srtTar.size() - j) << " entries." << endl;
 #endif
@@ -66,7 +66,7 @@ num_threads(nt), richness(-1), Shannon(-1.f){
 	for (uint i = 0; i < vec.size(); i++){
 		cumSum += vec[i];
 	}
-	if (verbose){ 
+	if (verbose){
 #ifdef notRpackage
 cerr << (long)cumSum << " allocating ";
 #endif
@@ -74,16 +74,16 @@ cerr << (long)cumSum << " allocating ";
 	//arr = (int*) malloc((int)cumSum * sizeof(int));
 	//arr = new unsigned short[(int)cumSum];
 	arr.resize((long)cumSum);
-	if (verbose){ 
+	if (verbose){
 #ifdef notRpackage
-cerr << "memory"; 
+cerr << "memory";
 #endif
 }
 	totSum = cumSum;
 	long k(0); uint posInVec(-1);
 	//numFeatures = 0;
 	for (size_t i = 0; i< vec.size(); i++){
-		
+
 		long maxG = (long)vec[i];
 		IDs.push_back( std::to_string(i));
 
@@ -99,9 +99,9 @@ cerr << "memory";
 	}
 	posInVec++;
 	numFeatures = posInVec;
-	if (verbose){ 
+	if (verbose){
 	#ifdef notRpackage
-	cerr << "..\n"; 
+	cerr << "..\n";
 	#endif
 	}
 }
@@ -119,17 +119,12 @@ smplVec::smplVec(const string inF, const int nt) :IDs(0),totSum(0), num_threads(
 		vec.push_back(num); IDs.push_back(ID);
 	}
 	in.close();
-	//
-#ifdef notRpackage
-cerr<<"tt";std::vector<unsigned short> v((int)cumSum);
-#endif
+
 	if (verbose){
-#ifdef notRpackage
-cerr<<(long)cumSum<<" allocating ";
-#endif
-}
-	//arr = (int*) malloc((int)cumSum * sizeof(int));
-	//arr = new unsigned short[(int)cumSum];
+		#ifdef notRpackage
+		cerr<<(long)cumSum<<" allocating ";
+		#endif
+	}
 	arr.resize((long)cumSum);
 	if (verbose){
 	#ifdef notRpackage
@@ -139,7 +134,7 @@ cerr<<(long)cumSum<<" allocating ";
 	totSum = cumSum;
 	long k(0); uint posInVec(0);
 	for (size_t i = 0; i< vec.size(); i++){
-		
+
 		long maxG = (long)vec[i];
 		maxG += k;
 		if (maxG == 0){ continue; }//not really a feature, doesnt need ot be counted as cat
@@ -158,7 +153,7 @@ cerr<<(long)cumSum<<" allocating ";
 
 
 void smplVec::rarefy(long dep, string ofile, int rep,
-					DivEsts* divs, std::vector<map<uint, uint>> & RareSample,
+					DivEsts* divs, std::vector<rare_map> & RareSample,
 					string& retCntsSampleName, string& skippedSample,
 					vector<vector<uint>>* abundInRow, vector<vector<uint>>* occuencesInRow,
 					int writes,bool write, bool fillret){
@@ -172,25 +167,17 @@ void smplVec::rarefy(long dep, string ofile, int rep,
 
 	for (int curRep=0;curRep<rep;curRep++){
 		if(curIdx+dep >= (long) totSum){
-			if (verbose){
-#ifdef notRpackage
-cerr<<"shuffle \n";
-#endif
-}		shuffle_singl();		if (verbose){
-#ifdef notRpackage
-cerr<<"shed\n";
-#endif
-}
+			shuffle_singl();	
 			curIdx=0;
 		}
 
+
 		//count up
-		vector<unsigned int> cnts(numFeatures, 0);
-		map<uint, uint> cntsMap;
+		vector<uint> cnts(numFeatures, 0);
 		for (long i=(0+curIdx);i<(dep+curIdx);i++){
 			cnts[arr[i]]++;
-			cntsMap[arr[i]]++;
 		}
+
 
 		curIdx += dep;
 		string t_out = ofile;
@@ -199,10 +186,15 @@ cerr<<"shed\n";
 			oss<<curRep;
 			t_out += "_" +oss.str();
 		}
-		if (curRep < writes && write){
-			print2File(cnts,t_out);
-		}
+
 		if (curRep < writes && fillret) {
+			rare_map cntsMap;
+			// fill map:
+			for(uint i = 0; i < cnts.size(); i++){
+				if(cnts[i] != 0){
+					cntsMap.insert( std::make_pair(i, cnts[i]) );
+				}
+			}
 			RareSample.push_back(cntsMap);
 
 			if(curRep == 0){
@@ -222,18 +214,19 @@ cerr<<"shed\n";
 		// save abundance for chao2 calculations later
 		rarefyMutex.lock();
 		for(uint i = 0; i < IDs.size(); i++){
-			uint value = 0;
+			//sparse convertions in swap mode
 			int id = std::stoi(IDs[i]);
-			auto fnd = cntsMap.find(i);
-			if(fnd != cntsMap.end()){
-				abundInRow->at(curRep)[id]++;
-				occuencesInRow->at(curRep)[id] = occuencesInRow->at(curRep)[id] + fnd->second;
+			if(cnts[i] != 0){
+				abundInRow->at(curRep)[id]++;	
+				occuencesInRow->at(curRep)[id] += cnts[i];
 			}
 		}
 		rarefyMutex.unlock();
 	}
 }
 
+
+// vector version of diversity fuctions:
 long smplVec::getRichness(const vector<unsigned int>& cnts){
 	for (size_t i = 0; i<cnts.size(); i++){
 		//out<<IDs[i]<<"\t"<<cnts[i]<<endl;
@@ -243,6 +236,172 @@ long smplVec::getRichness(const vector<unsigned int>& cnts){
 	}
 	return richness;
 }
+
+
+double smplVec::calc_chao1(const vector<uint> & vec,int corrBias){
+	double Sobs((double)richness);
+	double singl(0); double doubl(0);
+	for (size_t i=0;i<vec.size();i++){
+		if (vec[i]==1){singl++;}
+		else if (vec[i]==2){doubl++;}
+	}
+	double est=0.0;
+	if (corrBias==0){
+		est = float( Sobs + (singl*singl)/(2*doubl) );
+	} else {
+		est = float( Sobs + (singl*(singl-1))/(2*(doubl+1)) );
+	}
+	/*if (conf.int){
+	N = apply(M,2,sum)
+	P = exp(-N/Sobs)
+	P1 =Sobs/(1-P)
+	P2 = 1.96*sqrt((Sobs*P)/(1-P))
+	low =  P1 - P2
+	idx = low<Sobs
+	low[idx] = Sobs[idx]
+	hi = P1 + P2
+	}*/
+	return (est);
+}
+
+
+vector<double> smplVec::calc_div(const vector<uint>& vec,int meth, float base){
+	double sum = 0;
+	for (size_t i=0; i<vec.size();i++){sum+=(double)vec[i];}
+	vector<double> x(vec.begin(),vec.end());
+	for (size_t i=0; i<x.size();i++){x[i] /= sum;}
+	bool doexp = false;
+	if (base <= 2.718284f && base >= 2.718280f){ // account for machine imprecission
+		doexp = true;
+	}
+	vector<double> H(3, 0.0); double H1(0.0), H2(0.0), H3(0.0);
+	if (meth == 1 || meth == 4){
+		if (doexp){
+			for (size_t i=0; i<x.size();i++){if (x[i]>0){H1 += x[i] * -log(x[i])  ;}}
+		} else {
+			float div = -log10(base);
+			for (size_t i = 0; i<x.size(); i++){ if (x[i]>0){ H1 += x[i] * log10(x[i]) / div; } }
+		}
+		Shannon = H1;
+	}
+	if (meth == 3 || meth == 4 || meth == 2) {
+		for (size_t i = 0; i<x.size(); i++){ H2 += x[i] * x[i]; }
+		H3 = H2;
+		H2 = 1 - H2;//simpson
+		H3 = 1 / H3; //invsimpson
+	}
+	//for (size_t i=0; i<x.size();i++){H += x[i];}
+	//if (meth == (int)2) {		H = 1 - H;	}else if (meth == 3)		H = 1/H;	}
+	H[0] = H1; H[1] = H2; H[2] = H3;
+
+	return(H);
+}
+double smplVec::calc_eveness(const vector<uint>& vec){
+	//double sha = calc_div(vec,1);
+	if (Shannon == -1.f){ vector<double> tm = calc_div(vec, 1); }
+	return(Shannon / log((double)richness));
+}
+
+// map versions of diversity fuctions:
+long smplVec::getRichness(rare_map& cnts){
+	richness = cnts.size(); // set richness for other functions here
+	return richness;
+}
+
+double smplVec::calc_chao1(rare_map& cnts,int corrBias){
+	double Sobs((double)richness);
+	double singl(0); double doubl(0);
+	float est(0);
+	typedef rare_map::iterator it;
+	for(it iterator = cnts.begin(); iterator != cnts.end(); iterator++) {
+		if (iterator->second == 1){
+			singl++;
+		}else if(iterator->second == 2){
+			doubl++;
+		}
+	}
+
+	/*
+	for (size_t i=0;i<vec.size();i++){
+		if (vec[i]==1){singl++;}
+		else if (vec[i]==2){doubl++;}
+	}
+	*/
+	if (corrBias==0){
+		est = float( Sobs + (singl*singl)/(2*doubl) );
+	} else {
+		est = float( Sobs + (singl*(singl-1))/(2*(doubl+1)) );
+	}
+
+	return est;
+}
+
+
+vector<double> smplVec::calc_div(rare_map& cnts,int meth, float base){
+	double sum = 0;
+	vector<double> H(3, 0.0); double H1(0.0), H2(0.0), H3(0.0);
+	//for (size_t i=0; i<vec.size();i++){sum+=(double)vec[i];}
+	sum = std::accumulate(std::begin(cnts), std::end(cnts), 0, [] (int value, const rare_map::value_type& p){ return value + p.second; });
+
+	// copy counts into x
+	unordered_map <uint, double> x;
+	x.insert(cnts.begin(), cnts.end());
+	typedef unordered_map <uint, double>::iterator it;
+	for(it iterator = x.begin(); iterator != x.end(); iterator++) {
+		// iterator->first = key
+		 iterator->second /= sum;
+	}
+	/*
+	vector<double> x(vec.begin(),vec.end());
+	for (size_t i=0; i<x.size();i++){x[i] /= sum;}*/
+	
+	
+	bool doexp = false;
+	if (base <= 2.718284f && base >= 2.718280f){ // account for machine imprecission
+		doexp = true;
+	}
+
+	if (meth == 1 || meth == 4){
+		if (doexp){
+			typedef unordered_map <uint, double>::iterator it;
+			for(it iterator = x.begin(); iterator != x.end(); iterator++) {
+				if (iterator->second>0){H1 += iterator->second * -log(iterator->second)  ;}
+			}
+			//for (size_t i=0; i<x.size();i++){if (x[i]>0){H1 += x[i] * -log(x[i])  ;}}
+		} else {
+			float div = -log10(base);
+			typedef unordered_map <uint, double>::iterator it;
+			for(it iterator = x.begin(); iterator != x.end(); iterator++) {
+				if (iterator->second>0){H1 += iterator->second * -log10(iterator->second)/ div;}
+			}
+			//for (size_t i = 0; i<x.size(); i++){ if (x[i]>0){ H1 += x[i] * log10(x[i]) / div; } }
+		}
+		Shannon = H1;
+	}
+	
+	if (meth == 3 || meth == 4 || meth == 2) {
+		typedef unordered_map <uint, double>::iterator it;
+		for(it iterator = x.begin(); iterator != x.end(); iterator++) {
+			H2 += iterator->second * iterator->second;
+		}
+		//for (size_t i = 0; i<x.size(); i++){ H2 += x[i] * x[i]; }
+		H3 = H2;
+		H2 = 1 - H2;//simpson
+		H3 = 1 / H3; //invsimpson
+	}
+	H[0] = H1; H[1] = H2; H[2] = H3;
+	
+	return(H);
+}
+double smplVec::calc_eveness(rare_map& cnts){
+	//double sha = calc_div(vec,1);
+	if (Shannon == -1.f){ vector<double> tm = calc_div(cnts, 1); }
+	return(Shannon / log((double)richness));
+}
+
+
+
+
 
 
 void smplVec::print2File(const vector<unsigned int>& cnts,const string t_out){
@@ -303,25 +462,31 @@ cerr<<"fini";
 }
 }
 */
-void smplVec::shuffle_singl(){
+/*void smplVec::shuffle_singl(){
 	time_t seed_val=time(NULL);           // populate somehow
 	rng.seed((long)seed_val);
-
-	for (unsigned long i = (unsigned long)totSum- 1; i > 0; i--) {
+	unsigned long j; unsigned int temp;
+	for (unsigned long i = 0 ; i < (unsigned long)(totSum - 1); i++) {
 		std::uniform_int_distribution<unsigned long> uint_distx(0,i);
-		unsigned long j = uint_distx(rng);
-		unsigned int temp = arr[i] ;
+		j = uint_distx(rng);
+		temp = arr[i] ;
 		arr[i] = arr[j];
 		arr[j] = temp;
 		//swap(arr[i],arr[j]);
 	}
 	if (verbose){
-#ifdef notRpackage
-cerr<<"fini";
-#endif
-}
-}
+	#ifdef notRpackage
+	//cerr<<"fini";
+	#endif
+	}
+}*/
 
+void smplVec::shuffle_singl() {
+	//auto engine = std::default_random_engine{};
+	std::random_device rd;
+	auto engine = std::mt19937_64{rd()};
+	std::shuffle(std::begin(arr), std::end(arr), engine);	
+}
 
 
 int smplVec::binarySearch( vector<float> vec, const float toFind)
@@ -392,78 +557,14 @@ int smplVec::binarySearch( vector<float> vec, const float toFind)
 	}
 	/*/
 
-double smplVec::calc_chao1(const vector<uint> & vec,int corrBias=1){
-	double Sobs((double)richness);
-	double singl(0); double doubl(0);
-	for (size_t i=0;i<vec.size();i++){
-		if (vec[i]==1){singl++;}
-		else if (vec[i]==2){doubl++;}
-	}
-	double est=0.0;
-	if (corrBias==0){
-		est = float( Sobs + (singl*singl)/(2*doubl) );
-	} else {
-		est = float( Sobs + (singl*(singl-1))/(2*(doubl+1)) );
-	}
-	/*if (conf.int){
-	N = apply(M,2,sum)
-	P = exp(-N/Sobs)
-	P1 =Sobs/(1-P)
-	P2 = 1.96*sqrt((Sobs*P)/(1-P))
-	low =  P1 - P2
-	idx = low<Sobs
-	low[idx] = Sobs[idx]
-	hi = P1 + P2
-	}*/
-	return (est);
-}
-
-
-vector<double> smplVec::calc_div(const vector<uint>& vec,int meth=1, float base){
-	double sum = 0;
-	for (size_t i=0; i<vec.size();i++){sum+=(double)vec[i];}
-	vector<double> x(vec.begin(),vec.end());
-	for (size_t i=0; i<x.size();i++){x[i] /= sum;}
-	bool doexp = false;
-	if (base <= 2.718284f && base >= 2.718280f){ // account for machine imprecission
-		doexp = true;
-	}
-	vector<double> H(3, 0.0); double H1(0.0), H2(0.0), H3(0.0);
-	if (meth == 1 || meth == 4){
-		if (doexp){
-			for (size_t i=0; i<x.size();i++){if (x[i]>0){H1 += x[i] * -log(x[i])  ;}}
-		} else {
-			float div = -log10(base);
-			for (size_t i = 0; i<x.size(); i++){ if (x[i]>0){ H1 += x[i] * log10(x[i]) / div; } }
-		}
-		Shannon = H1;
-	}
-	if (meth == 3 || meth == 4 || meth == 2) {
-		for (size_t i = 0; i<x.size(); i++){ H2 += x[i] * x[i]; }
-		H3 = H2;
-		H2 = 1 - H2;//simpson
-		H3 = 1 / H3; //invsimpson
-	}
-	//for (size_t i=0; i<x.size();i++){H += x[i];}
-	//if (meth == (int)2) {		H = 1 - H;	}else if (meth == 3)		H = 1/H;	}
-	H[0] = H1; H[1] = H2; H[2] = H3;
-
-	return(H);
-}
-double smplVec::calc_eveness(const vector<uint>& vec){
-	//double sha = calc_div(vec,1);
-	if (Shannon == -1.f){ vector<double> tm = calc_div(vec, 1); }
-	return(Shannon / log((double)richness));
-}
-
 
 
 void DivEsts::print2file(const string file){
 	if (richness.size()<1){return;}
 	ofstream out(file.c_str());
-	if (!out){ 
+	if (!out){
 #ifdef notRpackage
-cerr << "Couldn't open diversity estimate file " << file << endl; std::exit(99); 
+cerr << "Couldn't open diversity estimate file " << file << endl; std::exit(99);
 #endif
 }
 	out<<"Richness\t"<<richness[0];
@@ -496,14 +597,14 @@ void printDivMat(const string outF, vector<DivEsts*>& inD, bool printDIV ){
 
 	string outFmedian = outF + "median_alpha_diversity.tsv";
 	ofstream out(outFmedian.c_str());
-	if (!out){ 
+	if (!out){
 #ifdef notRpackage
-cerr << "Couldn't open diversity estimate matrix " << outF << endl; std::exit(99); 
+cerr << "Couldn't open diversity estimate matrix " << outF << endl; std::exit(99);
 #endif
 }
 	out << "Smpl\tRichness\tShannon\tSimpson\tInv. Simpson\tChao1\tEveness\n";
 	for (size_t i = 0; i < inD.size(); i++){
-		if (inD[i] == NULL){ 
+		if (inD[i] == NULL){
 #ifdef notRpackage
 cerr << "Empty vector at index " << i << "in div mat building.\n";
 #endif
@@ -597,11 +698,11 @@ cerr << "Empty vector at index " << i << "in div mat building.\n";
 	}
 
 }
-void printRareMat(const string outF, vector< map< uint, uint >>& rMat, vector< string >& sampleNames, vector < string >& rowId){
+void printRareMat(const string outF, const vector< rare_map>& rMat, vector< string >& sampleNames, vector < string >& rowId){
 	ofstream out(outF.c_str());
-	if (!out){ 
+	if (!out){
 #ifdef notRpackage
-cerr << "Couldn't open rarefy matrix file " << outF << endl; std::exit(99); 
+cerr << "Couldn't open rarefy matrix file " << outF << endl; std::exit(99);
 #endif
 }
 
@@ -631,14 +732,14 @@ cerr << "Couldn't open rarefy matrix file " << outF << endl; std::exit(99);
 
 
 
-string printSimpleMap(map<uint, uint> vec, string outF, string id, vector<string> rowNames){
+string printSimpleMap(const rare_map & vec, string outF, string id, vector<string> rowNames){
 	// takes a map from the rarefaction function and writes the vector
 	// to the disk.
 	// this way we dont need memory to do
 	ofstream out(outF.c_str(),  ios::binary);
-	if (!out){ 
+	if (!out){
 #ifdef notRpackage
-cerr << "Couldn't open tmpvec file " << outF << endl; std::exit(99); 
+cerr << "Couldn't open tmpvec file " << outF << endl; std::exit(99);
 #endif
 }
 	for(uint i = 0; i < rowNames.size(); i++){
@@ -689,9 +790,9 @@ void reassembleTmpMat(vector<string> inF, vector< string > rowNames, vector< str
 	}
 
 	ofstream out(outF.c_str());
-	if (!out){ 
+	if (!out){
 #ifdef notRpackage
-cerr << "Couldn't open tmpvec file " << outF << endl; std::exit(99); 
+cerr << "Couldn't open tmpvec file " << outF << endl; std::exit(99);
 #endif
 }
 	out << "Rarefied";

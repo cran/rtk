@@ -17,6 +17,7 @@
 #include <random>
 #include <assert.h>
 #include <unordered_map>
+#include <numeric>
 #include <future>
 #include <mutex>
 
@@ -41,6 +42,7 @@ typedef float smat_fl;
 using namespace std;
 typedef unsigned int uint;
 typedef unsigned long ulong;
+typedef unordered_map <uint, uint> rare_map;
 
 ulong thr_rng(unsigned long,MyRNG&);
 std::istream& safeGetline(std::istream& is, std::string& t);
@@ -57,6 +59,8 @@ template<typename T> T getMedian(vector<T>& in){
 	return median;
 }
 void lineCntOut(const string inF, const string outF, const string arg4);
+
+
 
 inline std::string stringify(double x)
  {
@@ -82,8 +86,8 @@ public:
 	string SampleName;
 };
 void printDivMat(const string outF, vector<DivEsts*>&, bool);
-void printRareMat(const string outF, vector< map< uint, uint >>& rMat, vector< string >& sampleNames, vector < string >& rowId);
-string printSimpleMap(map<uint, uint> vec, string outF, string id, vector<string> rowNames);
+void printRareMat(const string outF,const vector< rare_map>& rMat, vector< string >& sampleNames, vector < string >& rowId);
+string printSimpleMap(const rare_map &vec, string outF, string id, vector<string> rowNames);
 void reassembleTmpMat(vector<string> inF, vector< string > rowNames,vector< string > colNames, string outF);
 
 class smplVec{
@@ -93,9 +97,10 @@ public:
 	~smplVec(){
 		//delete[] arr;
 	}
-	void rarefy(long,string o,int rep,DivEsts*, vector<map<uint, uint>>& RareSample,
+	void rarefy(long,string o,int rep,DivEsts*, vector<rare_map>& RareSample,
 		string& retCntsSampleName, string& skippedSample, vector<vector<uint>>* ,vector<vector<uint>>* , int=0,bool=false, bool=false);
-	long getRichness(const vector<unsigned int>& cnts);
+	long getRichness(rare_map& cnts);
+	long getRichness(const vector<unsigned int>&);
 	//int maxSiz(){return vector<unsigned short>::max_size();}
 	vector < string > getRowNames(){ return(IDs); }
 
@@ -106,9 +111,12 @@ private:
 
 	//diversity indices
 	//method: 1=shannon, 2=simpson, 3=invsimpson
-	vector <double> calc_div(const vector<uint>& , int meth, float base=2.718282f);
-	double calc_chao1(const vector<uint>& , int corrBias); //corrBias: 0/1
-	double calc_eveness(const vector<uint>& );
+	vector<double> calc_div(const vector<uint>& vec,int meth=1, float base=2.718282f);
+	vector <double> calc_div(rare_map& , int meth=1, float base=2.718282f);
+	double calc_chao1(const vector<uint> & vec,int corrBias=1);
+	double calc_chao1(rare_map& , int corrBias=1); //corrBias: 0/1
+	double calc_eveness(const vector<uint>& vec);
+	double calc_eveness(rare_map& );
 
 	void print2File(const vector<unsigned int>&,const string);
 	//unsigned short * arr;
