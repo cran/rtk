@@ -5,7 +5,7 @@ struct options
 {
 public:
 	options(int argc, char** argv);
-	options(std::string, std::string , int repeats, std::vector<long> depth, int NoOfMatrices, bool verbose, unsigned int threads);
+	options(std::string, std::string , int repeats, std::vector<double> depth, int NoOfMatrices, bool verbose, unsigned int threads);
 	void print_rare_details();
 	//~options();
 
@@ -16,7 +16,7 @@ public:
   std::string referenceDir = "";
   std::string referenceFile = "";
   std::string map = "";
-  std::vector<long> depth;
+  std::vector<double> depth;
   long depthMin;
   unsigned int repeats = 10;
   unsigned int write = 0;
@@ -24,13 +24,15 @@ public:
   bool writeSwap = true;
   bool verbose = false;
 
-  std::string modDB;
-  int modRedund;
-  float modEnzCompl;
-  float modModCompl;
-  bool modWrXtraInfo;
-  bool modCollapse;
-  bool calcCoverage;
+    std::string modDB;
+    int modRedund;
+    float modEnzCompl;
+    float modModCompl;
+    bool modWrXtraInfo;
+    bool modCollapse;
+    bool calcCoverage;
 
+  std::string modDescr;
+  std::string modHiera;
   std::string xtra;
 };
