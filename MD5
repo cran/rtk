@@ -1,12 +1,12 @@
-a7254439567d2b5e81cfc7cd9f333058 *DESCRIPTION
+3e59247fb2f78fe850be5e504271061d *DESCRIPTION
 8a7c05e59254850952bae39b520caea4 *NAMESPACE
 88fa1e53a3f34832952c8ff99ed9dc90 *R/RcppExports.R
 ac8f01039783305f88ae4c3074386e65 *R/collectorscurve.R
 1ba81223bfd253fccb26511b19dc3346 *R/rarefaction.R
 297b301e240e3b64276f5259baa1fcd0 *R/rarefaction.plots.R
 852a185ed0631153f463156d8ff39d8c *README.md
-8d2d4c81297db640f8696a9e917ae7ad *build/partial.rdb
-14beca1abbbee226ffdc557fc4eb13ad *inst/CITATION
+f9025e95b148df1f824d96309a933d98 *build/partial.rdb
+c892775da2853ff87fd91baee2f823f6 *inst/CITATION
 ece2e097df1ee847bb386fdba13cd59e *man/collectors.curve.Rd
 b7c21ac8c164a482f4677f757cca0b88 *man/get.diversity.Rd
 14247e2f429f2f42308261782fc4703d *man/plot.rarefaction.Rd
@@ -20,7 +20,7 @@ e71f1957798f7be4611c99395483fdd0 *src/Makevars
 e71f1957798f7be4611c99395483fdd0 *src/Makevars.win
 943a19b18c22eede019d6a6f73e1f06a *src/Math.cpp
 49976a0ec34f5c211808c435ccd657e6 *src/Math.h
-8cb946469f9356f96a444a8eb522a43d *src/Matrix.cpp
+4eb9c004267899cf24983cd40ccf3bd9 *src/Matrix.cpp
 07d874dfe5b263650767a6e7f7cde59b *src/Matrix.h
 0d3b1fad4f0f4ff37f538dc003fc6cf1 *src/RRare.cpp
 46f70dcce8cb1e1534a4b75fed681534 *src/RRare.h

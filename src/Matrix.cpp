@@ -581,7 +581,7 @@ void Modules::writeModDescr(const string& nos, bool onlyUsed) {
 		if (onlyUsed && !ModUsed[i]) { continue; }
 		of << rowIDs[i] ;
 		if (useHie) {
-			for (int u = 0; u < hierachy[i].size(); u++){
+			for (uint u = 0; u < hierachy[i].size(); u++){
 				of << "\t" << hierachy[i][u];
 			}
 		}
@@ -1575,9 +1575,9 @@ void VecFiles::readVecFile(const string inF){
 		int CurIdx(-1);
 		while (getline(ss,segments,'\t')) {
 			cnt2++;
-			if (cnt2==-1){
+			if (cnt2 == -1){
 				//rowID = segments;
-				CurIdx=this->getIdx(segments);
+				CurIdx = this->getIdx(segments);
 				continue;
 			}
 			mat_fl tmp =  atof(segments.c_str());
