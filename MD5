@@ -1,11 +1,11 @@
-a5e5aca7d068cbc4a68e2fb4f59ed929 *DESCRIPTION
+b9eb56522b32eea1745d3d3a2b6a84aa *DESCRIPTION
 8a7c05e59254850952bae39b520caea4 *NAMESPACE
 88fa1e53a3f34832952c8ff99ed9dc90 *R/RcppExports.R
 ac8f01039783305f88ae4c3074386e65 *R/collectorscurve.R
 0289aa9f40f0478932d51abc33935d92 *R/rarefaction.R
 297b301e240e3b64276f5259baa1fcd0 *R/rarefaction.plots.R
 852a185ed0631153f463156d8ff39d8c *README.md
-670c65e0c28a41128ba36de09d55880a *build/partial.rdb
+43b7d14d13bb7412b4fe99e4c5d52694 *build/partial.rdb
 c892775da2853ff87fd91baee2f823f6 *inst/CITATION
 04e61cf22c6e549c92ef9cf6ac5496d8 *man/collectors.curve.Rd
 e4626803b71f05d8d03788d3bbb3c121 *man/get.diversity.Rd
@@ -14,7 +14,7 @@ c22af6156447189c73a4eddd44042d01 *man/rtk-package.Rd
 2830e45915e6786b9cbff6c5c91ca7f5 *man/rtk.Rd
 3b67f38e4520008747981f43d26a1477 *src/ClStr2Mat.cpp
 4ce487d7ff54b9ed85c7b98cadb9b8f6 *src/ClStr2Mat.h
-352427db2cf77a24a7edf281dfe82685 *src/IO.cpp
+ee9736eeb39e3a764b88150e50cdc480 *src/IO.cpp
 5a3907f205e778e554207b2264a9f31a *src/IO.h
 e71f1957798f7be4611c99395483fdd0 *src/Makevars
 e71f1957798f7be4611c99395483fdd0 *src/Makevars.win
