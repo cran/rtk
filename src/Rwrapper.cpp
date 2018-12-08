@@ -106,7 +106,7 @@ List returnRList(options* opts, vector<DivEsts*>& divvs, vector<vector<mat_fl>>&
         if(verbose == true){
             Rcout << "Will now prepare rarefied matrices for R\n";
         }
-        for(int i=0; i < opts->write; i++){
+        for(uint i=0; i < opts->write; i++){
             if(MaRare[di][i].size() > 0){
                 IntegerMatrix RdfTmp 	= matrix2Mat(MaRare[di][i], cntsNam, rowNames, transpose);
                 RrarefyMatrices[i]		= RdfTmp;

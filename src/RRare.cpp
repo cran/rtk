@@ -303,7 +303,7 @@ int rarefyMain(options* opts,  string mode,
 	bool transpose)
 {
 	// compatibility to main rare software
-	bool writeFiles = false;
+	//bool writeFiles = false;
 
 	MyRNG rng;
 

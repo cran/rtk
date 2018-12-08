@@ -26,7 +26,8 @@ plot.rtk <- function(x, div = c("richness"),  groups = NA, col = NULL, lty = 1, 
 	}else{
     warning("No depths provided")
 	}
-  return()
+  invisible()
+
 }
 
 
@@ -203,7 +204,7 @@ rarefaction.curve <- function(obj, div, groups, col , lty, pch, fit,  legend, le
     legend(legend.pos, inset=.02,names(ydata) , col=legendcolors, horiz=FALSE, cex=0.8, pch = pch)
   }
 
-  return(NULL)
+  return()
 }
 
 
