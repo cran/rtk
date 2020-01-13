@@ -64,6 +64,6 @@ plot(d1, div = "richness")
 #rarefaction curve for each sample with fit
 plot(d2, div = "eveness", fit = "arrhenius", pch = c(1,2,3))
 # Rarefaction curve with boxplot, sampels pooled together (grouped)
-#plot(d2, div = "richness", fit = FALSE, boxplot = TRUE, col = 1, groups = rep(1, ncol(data)))
+plot(d2, div = "richness", fit = FALSE, boxplot = TRUE, col = 1, groups = rep(1, ncol(data)))
 
 }

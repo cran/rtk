@@ -668,8 +668,8 @@ Matrix::Matrix(const string inF, const string outF, vector<double> colsums, vect
 	if (!out) {
 		cerr << "Can't open out file " << outF << endl; std::exit(11);
 	}
-	int ini_ColPerRow = iniCols(in);
     #endif
+	int ini_ColPerRow = iniCols(in);
 	readColNms(in);
 
     #ifdef notRpackage

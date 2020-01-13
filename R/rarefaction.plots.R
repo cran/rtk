@@ -26,8 +26,7 @@ plot.rtk <- function(x, div = c("richness"),  groups = NA, col = NULL, lty = 1, 
 	}else{
     warning("No depths provided")
 	}
-  invisible()
-
+  return()
 }
 
 
@@ -101,7 +100,7 @@ rarefaction.curve <- function(obj, div, groups, col , lty, pch, fit,  legend, le
   rownames(ydata) <- sapply(obj[[1]]$divvs, function(x){return(x$samplename)})
 
   # merge samples if grouping should be done
-  if(!is.na(groups) && length(groups) == nrow(ydata)){
+  if(all(is.na(groups)) && length(groups) == nrow(ydata)){
     ydata <- as.data.frame(ydata)
 
     ydata <- lapply((split(ydata, groups)), function(g){
@@ -204,7 +203,7 @@ rarefaction.curve <- function(obj, div, groups, col , lty, pch, fit,  legend, le
     legend(legend.pos, inset=.02,names(ydata) , col=legendcolors, horiz=FALSE, cex=0.8, pch = pch)
   }
 
-  return()
+  return(NULL)
 }
 
 
@@ -213,7 +212,7 @@ rarefaction.curve <- function(obj, div, groups, col , lty, pch, fit,  legend, le
 
 
 rarefaction.curve.boxplot <- function(x,  ...){
-  if(class(x) != "rarefaction"){
+  if(!is(x,"rarefaction")){
     stop("Not a rarefaction object")
   }
 
