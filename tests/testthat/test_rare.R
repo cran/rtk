@@ -48,3 +48,14 @@ test_that("Skipped samples are reported", {
     expect_that(length(data.r$skipped),equals(1)) 
 
 })
+
+test_that("Seed produces reproducible runs", {
+    data  =  matrix(sample(0:100, 1000, replace = TRUE),
+                            20)
+    a = rtk(data, seed  = 42, depth = 5)
+    b = rtk(data, seed  = 42, depth = 5)
+    expect_equal(a,b)
+})
+
+
+
